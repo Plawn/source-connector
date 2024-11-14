@@ -30,7 +30,7 @@ function prepare_date(s: string | undefined): string | undefined {
     return undefined;
   }
   const d = new Date(parseFloat(s) * 1000);
-  /// TODO finish here
+  return d.toISOString();
 }
 
 app.post("/", async (c) => {

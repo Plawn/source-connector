@@ -1,4 +1,4 @@
-import { Connector, ExportItem } from "./connector";
+import { Connector, ExportItem } from "./connector.ts";
 
 type Item = {
   id: string;

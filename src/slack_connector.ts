@@ -1,6 +1,6 @@
-import { Connector, ExportItem } from "./connector";
+import { Connector, ExportItem } from "./connector.ts";
 import { WebClient } from "slack-web";
-import { prepare_date } from "./utils";
+import { prepare_date } from "./utils.ts";
 
 export type State = {
   last_cursor: undefined | string;

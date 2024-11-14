@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 import { Settings, SlackConnector, State } from "./slack_connector.ts";
-import { Input } from "./connector.ts";
 import { TruspilotConnector } from "./trustpilot_connector.ts";
 
 const app = new Hono();
@@ -29,13 +28,13 @@ type Input = {
 };
 
 
-app.post("/:connector_name", async (c) => {
+app.post("/:connectorName", async (c) => {
   // comes from post json params
-  const connector_name = "";
+  const connectorName = c.req.param('connectorName');
   const params: Input = await c.req.json();
   // should check params of state
   const state: State = JSON.parse(params.state);
-  const connector = getConnector(connector_name, params.settings);
+  const connector = getConnector(connectorName, params.settings);
 
   const result = await connector.get(state);
 

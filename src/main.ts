@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { SlackConnector, State } from "./slack_connector.ts";
+import { SlackConnector } from "./slack_connector.ts";
 import { TruspilotConnector } from "./trustpilot_connector.ts";
 
 const app = new Hono();
@@ -33,7 +33,7 @@ app.post("/:connectorName", async (c) => {
   const connector = getConnector(connectorName, params.settings);
   console.log('using connector', connector);
   // should check params of state
-  const state: State = JSON.parse(params.state);
+  const state = JSON.parse(params.state);
   const result = await connector.get(state);
 
   return c.json({

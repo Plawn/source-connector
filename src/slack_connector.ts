@@ -7,8 +7,8 @@ export type State = {
 };
 
 export type Settings = {
-  bot_token: string;
-  channel_id: string;
+  botToken: string;
+  channelId: string;
 };
 
 export class SlackConnector implements Connector<State, Settings> {
@@ -19,8 +19,8 @@ export class SlackConnector implements Connector<State, Settings> {
   }
 
   async get(state: State): Promise<{ result: ExportItem[]; state: State }> {
-    const client = new WebClient(this.settings.bot_token); // Remplace par ton OAuth Token Bot
-    const channelId = this.settings.channel_id;
+    const client = new WebClient(this.settings.botToken); // Remplace par ton OAuth Token Bot
+    const channelId = this.settings.channelId;
 
     try {
       let messages: any[] = [];

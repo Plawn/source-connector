@@ -13,6 +13,7 @@ async function testTrustpilot() {
   });
 
   const j = await res.json();
+  console.log(j.result.length);
 
   await Deno.writeTextFile("res-trustpilot.json", JSON.stringify(j));
 }
@@ -37,5 +38,5 @@ async function testSlack() {
     await Deno.writeTextFile("res-slack.json", JSON.stringify(j));
   }
 
-// await testTrustpilot();
-await testSlack();
+await testTrustpilot();
+// await testSlack();

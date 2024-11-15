@@ -46,13 +46,13 @@ export class TruspilotConnector implements Connector<State, Settings> {
           headers,
         });
         const result: Res = await resp.json();
+        if (result.reviews) {
+          messages = messages.concat(result.reviews);
+        }
         if (result.nextPageToken) {
           cursor = result.nextPageToken;
         } else {
           break;
-        }
-        if (result.reviews) {
-          messages = messages.concat(result.reviews);
         }
         console.log("did token", cursor, "having", messages.length);
       }

@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY deno.json .
 COPY deno.lock .
-COPY src .
+COPY src src
 
 RUN deno install --entrypoint src/main.ts
 

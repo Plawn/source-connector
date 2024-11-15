@@ -1,8 +1,3 @@
-```
-deno task start
-```
-
-
 ## TODO
 
 - make docker image

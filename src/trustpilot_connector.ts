@@ -30,35 +30,31 @@ export class TruspilotConnector implements Connector<State, Settings> {
   }
 
   async get(state: State): Promise<{ result: ExportItem[]; state: State }> {
+    console.log("in connector Trustpilot");
     try {
       let messages: Item[] = [];
-      let hasMore = true;
       let cursor: string | undefined = state.last_cursor;
-      let last_cursor_current: string | undefined;
-      const url =
-        `https://api.trustpilot.com/v1/business-units/${this.settings.businessUnitId}/all-reviews`;
-      const headers = new Headers();
-      headers.append("apikey", this.settings.apiKey);
 
-      while (hasMore) {
+      while (true) {
+        const url =
+          `https://api.trustpilot.com/v1/business-units/${this.settings.businessUnitId}/all-reviews${
+            cursor ? "?pageToken=" + cursor : ""
+          }`;
+        const headers = new Headers();
+        headers.append("apikey", this.settings.apiKey);
         const resp = await fetch(url, {
           headers,
         });
         const result: Res = await resp.json();
-
+        if (result.nextPageToken) {
+          cursor = result.nextPageToken;
+        } else {
+          break;
+        }
         if (result.reviews) {
           messages = messages.concat(result.reviews);
         }
-        // TODO: handle has more
-        // TODO: mettre à jour le last cursor
-
-        // // Contrôler le curseur pour savoir si d'autres messages existent
-        // hasMore = result.has_more || false;
-        // cursor = result.response_metadata?.next_cursor;
-        // if (cursor) {
-        //     console.log("cursor", result.response_metadata?.next_cursor);
-        //     last_cursor_current = cursor;
-        // }
+        console.log("did token", cursor, "having", messages.length);
       }
 
       const result: ExportItem[] = messages
@@ -71,7 +67,7 @@ export class TruspilotConnector implements Connector<State, Settings> {
       return {
         result,
         state: {
-          last_cursor: last_cursor_current,
+          last_cursor: cursor,
         },
       };
     } catch (error) {

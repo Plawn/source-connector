@@ -27,10 +27,9 @@ type Input = {
   settings: string;
 };
 
-
 app.post("/:connectorName", async (c) => {
   // comes from post json params
-  const connectorName = c.req.param('connectorName');
+  const connectorName = c.req.param("connectorName");
   const params: Input = await c.req.json();
   // should check params of state
   const state: State = JSON.parse(params.state);

@@ -31,7 +31,7 @@ app.post("/:connectorName", async (c) => {
   const connectorName = c.req.param("connectorName");
   const params: Input = await c.req.json();
   const connector = getConnector(connectorName, params.settings);
-  console.log('using connector', connector);
+  console.log("using connector", connector);
   // should check params of state
   const state = JSON.parse(params.state);
   const result = await connector.get(state);

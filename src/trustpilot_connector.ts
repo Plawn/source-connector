@@ -14,7 +14,8 @@ type Res = {
 };
 
 export type State = {
-  last_cursor: undefined | string;
+  page: undefined | number;
+  last_ids: string[] | undefined;
 };
 
 export type Settings = {
@@ -33,29 +34,36 @@ export class TruspilotConnector implements Connector<State, Settings> {
     console.log("in connector Trustpilot");
     try {
       let messages: Item[] = [];
-      console.log('state', state);
-      let cursor: string | undefined = state.last_cursor;
-      console.log('first cursor', cursor);  
+      const last_ids = new Set<string>(state.last_ids|| []);
+      console.log("state", state);
+      let page: number = state.page || 1;
+      console.log("first cursor", page);
+      const headers = new Headers();
+      let next_last_ids = new Set<string>();
+      headers.append("apikey", this.settings.apiKey);
       while (true) {
+        // order by
+        // orderBy=createdat.asc
         const url =
-          `https://api.trustpilot.com/v1/business-units/${this.settings.businessUnitId}/all-reviews${
-            cursor ? "?pageToken=" + cursor : ""
-          }`;
-        const headers = new Headers();
-        headers.append("apikey", this.settings.apiKey);
+          `https://api.trustpilot.com/v1/business-units/${this.settings.businessUnitId}/reviews?page=${page}&orderBy=createdat.asc&perPage=100`;
+
         const resp = await fetch(url, {
           headers,
         });
         const result: Res = await resp.json();
-        if (result.reviews) {
-          messages = messages.concat(result.reviews);
+        if (result.reviews.length > 0) {
+          // ensure no duplicates on last page
+          next_last_ids = new Set(result.reviews.map(e => e.id));
+          messages = messages.concat(
+            result.reviews.filter((e) => !last_ids.has(e.id))
+          );
         }
-        if (result.nextPageToken) {
-          cursor = result.nextPageToken;
-        } else {
+        console.log("next cursor", result.nextPageToken);
+        console.log("did page", page, "having", messages.length);
+        if (result.reviews.length < 100) {
           break;
         }
-        console.log("did token", cursor, "having", messages.length);
+        page++;
       }
 
       const result: ExportItem[] = messages
@@ -65,10 +73,12 @@ export class TruspilotConnector implements Connector<State, Settings> {
           // already like: 2024-11-07T21:23:26.000Z
           date: e.createdAt,
         }));
+
       return {
         result,
         state: {
-          last_cursor: cursor,
+          page: page,
+          last_ids: [...next_last_ids.values()],
         },
       };
     } catch (error) {

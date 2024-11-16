@@ -4,10 +4,11 @@ async function testTrustpilot() {
     apiKey: Deno.env.get("TRUSTPILOT_API"),
   };
 
-  const res = await fetch("https://source.temp1-webservice.blumana.app/trustpilot", {
+//   const res = await fetch("https://source.temp1-webservice.blumana.app/trustpilot", {
+    const res = await fetch("http://localhost:8000/trustpilot", {
     method: "POST",
     body: JSON.stringify({
-      state: "{}",
+      state: '{"last_cursor": "MjAyMS0wNC0yOFQxODo0MzozMi4wMDBafDYwODlhY2Q0ZjlmNDg3MDUxMDMyYThmOQ"}',
       settings: JSON.stringify(params),
     }),
   });

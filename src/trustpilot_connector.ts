@@ -33,8 +33,9 @@ export class TruspilotConnector implements Connector<State, Settings> {
     console.log("in connector Trustpilot");
     try {
       let messages: Item[] = [];
+      console.log('state', state);
       let cursor: string | undefined = state.last_cursor;
-
+      console.log('first cursor', cursor);  
       while (true) {
         const url =
           `https://api.trustpilot.com/v1/business-units/${this.settings.businessUnitId}/all-reviews${

@@ -3,7 +3,8 @@ import { WebClient } from "slack-web";
 import { prepare_date } from "./utils.ts";
 
 export type State = {
-  last_cursor: string;
+  // can be undefined when a channel has not much messages
+  last_cursor: string | undefined;
   last_ids: string[];
 };
 
@@ -45,13 +46,14 @@ export class SlackConnector implements Connector<State, Settings> {
       let next_last_ids = new Set<string>();
       const last_ids = new Set<string>(state.last_ids || []);
       let cursor: string | undefined = state.last_cursor;
+      // console.log('entry cursor', cursor);
       while (hasMore) {
         const result: SlackHistoryChunk = await client.conversations.history({
           channel: channelId,
           cursor: cursor,
           limit: 100,
         });
-
+        // console.log('result', result);
         if (result.messages) {
           next_last_ids = new Set(result.messages.map(e => e.ts));
           messages = messages.concat(

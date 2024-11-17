@@ -3,12 +3,29 @@ import { WebClient } from "slack-web";
 import { prepare_date } from "./utils.ts";
 
 export type State = {
-  last_cursor: undefined | string;
+  last_cursor: string;
+  last_ids: string[];
 };
 
 export type Settings = {
   botToken: string;
   channelId: string;
+};
+
+type SlackEvent = {
+  type: string;
+  subtype?: string;
+  ts: string;
+  client_msg_id?: string;
+  text: string;
+}
+
+type SlackHistoryChunk = {
+  messages: SlackEvent[];
+  has_more: boolean;
+  response_metadata?: {
+    next_cursor?: string;
+  }
 };
 
 export class SlackConnector implements Connector<State, Settings> {
@@ -18,46 +35,49 @@ export class SlackConnector implements Connector<State, Settings> {
     this.settings = settings;
   }
 
-  async get(state: State): Promise<{ result: ExportItem[]; state: State }> {
+  async get(state: Partial<State>): Promise<{ result: ExportItem[]; state: State }> {
     const client = new WebClient(this.settings.botToken); // Remplace par ton OAuth Token Bot
     const channelId = this.settings.channelId;
 
     try {
-      let messages: any[] = [];
+      let messages: SlackEvent[] = [];
       let hasMore = true;
+      let next_last_ids = new Set<string>();
+      const last_ids = new Set<string>(state.last_ids || []);
       let cursor: string | undefined = state.last_cursor;
-      let last_cursor_current: string | undefined;
       while (hasMore) {
-        const result = await client.conversations.history({
+        const result: SlackHistoryChunk = await client.conversations.history({
           channel: channelId,
           cursor: cursor,
           limit: 100,
         });
 
         if (result.messages) {
-          messages = messages.concat(result.messages);
+          next_last_ids = new Set(result.messages.map(e => e.ts));
+          messages = messages.concat(
+            result.messages.filter((e) => !last_ids.has(e.ts))
+          );
         }
 
-        // Contrôler le curseur pour savoir si d'autres messages existent
         hasMore = result.has_more || false;
-        cursor = result.response_metadata?.next_cursor;
-        if (cursor) {
+        if (result.response_metadata?.next_cursor) {
           console.log("cursor", result.response_metadata?.next_cursor);
-          last_cursor_current = cursor;
+          cursor = result.response_metadata?.next_cursor;
         }
       }
-
       const result: ExportItem[] = messages
-        .filter((e) => e?.type === "message") // keep messages only
+        .filter((e) => e?.type === "message"
+          && e.subtype !== "channel_join") // keep messages only
         .map((e) => ({
           content: e.text,
-          id: undefined,
+          id: e.client_msg_id,
           date: prepare_date(e.ts),
         }));
       return {
         result,
         state: {
-          last_cursor: last_cursor_current,
+          last_cursor: cursor,
+          last_ids: [...next_last_ids.values()],
         },
       };
     } catch (error) {

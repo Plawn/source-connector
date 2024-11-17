@@ -26,10 +26,11 @@ async function testSlack() {
     botToken: Deno.env.get("SLACK_KEY"),
   };
 
-  const res = await fetch("https://source.temp1-webservice.blumana.app/slack", {
+//   const res = await fetch("https://source.temp1-webservice.blumana.app/slack", {
+    const res = await fetch("http://localhost:8000/slack", {
     method: "POST",
     body: JSON.stringify({
-      state: "{}",
+      state: "{\"last_cursor\":\"bmV4dF90czoxNzEyNTIzNTc2ODUyMTM5\",\"last_ids\":[\"1712523576.852139\"]}",
       settings: JSON.stringify(params),
     }),
   });
@@ -39,5 +40,5 @@ async function testSlack() {
   await Deno.writeTextFile("res-slack.json", JSON.stringify(j));
 }
 
-await testTrustpilot();
-// await testSlack();
+// await testTrustpilot();
+await testSlack();

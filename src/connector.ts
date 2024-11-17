@@ -6,7 +6,7 @@ export type ExportItem = {
 };
 
 export interface Connector<State, Settings> {
-  get(state: State): Promise<{ result: ExportItem[]; state: State }>;
+  get(state: Partial<State>): Promise<{ result: ExportItem[]; state: State }>;
   // static async create<State, Settings>(settings: string): Promise<Connector<State, Settings>> {
   //     throw new Error('Method not implemented! Use derived class');
   // }

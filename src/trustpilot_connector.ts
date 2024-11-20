@@ -68,7 +68,7 @@ export class TruspilotConnector implements Connector<State, Settings> {
 
       const result: ExportItem[] = messages
         .map((e) => ({
-          content: e.text,
+          content: e.title + "\n" + e.text,
           id: e.id,
           // already like: 2024-11-07T21:23:26.000Z
           date: e.createdAt,

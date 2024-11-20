@@ -26,8 +26,8 @@ async function testSlack() {
     botToken: Deno.env.get("SLACK_KEY"),
   };
 
-//   const res = await fetch("https://source.temp1-webservice.blumana.app/slack", {
-    const res = await fetch("http://localhost:8000/slack", {
+  const res = await fetch("https://source.temp1-webservice.blumana.app/slack", {
+    // const res = await fetch("http://localhost:8000/slack", {
     method: "POST",
     body: JSON.stringify({
       state: "{\"last_ids\":[\"1731859345.155019\",\"1731859342.622239\",\"1731859339.016269\",\"1731859333.165229\",\"1731859328.085839\",\"1731859327.926829\",\"1731859327.836099\",\"1731859327.748379\",\"1731859327.670149\",\"1731859323.310419\"]}",

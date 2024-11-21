@@ -74,6 +74,7 @@ export class SlackConnector implements Connector<State, Settings> {
           content: e.text,
           id: e.client_msg_id,
           date: prepare_date(e.ts),
+          metadata: {},
         }));
       return {
         result,

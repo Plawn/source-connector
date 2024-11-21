@@ -34,7 +34,7 @@ export class TruspilotConnector implements Connector<State, Settings> {
     console.log("in connector Trustpilot");
     try {
       let messages: Item[] = [];
-      const last_ids = new Set<string>(state.last_ids|| []);
+      const last_ids = new Set<string>(state.last_ids || []);
       console.log("state", state);
       let page: number = state.page || 1;
       console.log("first cursor", page);
@@ -72,6 +72,14 @@ export class TruspilotConnector implements Connector<State, Settings> {
           id: e.id,
           // already like: 2024-11-07T21:23:26.000Z
           date: e.createdAt,
+          metadata: {
+            stars: `${e.stars}`,
+            user_status: `${e.user_status}`,
+            client_type: `${e.client_type}`,
+            departement: `${e.departement}`,
+            user_said_in_ae: `${e.user_said_in_ae}`,
+            user_signed_up_from: `${e.user_signed_up_from}`,
+          },
         }));
 
       return {

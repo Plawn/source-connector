@@ -6,6 +6,7 @@ type Item = {
   text: string;
   createdAt: string; // date
   experiencedAt: string; // date
+  stars: number;
 };
 
 type Res = {
@@ -65,7 +66,7 @@ export class TruspilotConnector implements Connector<State, Settings> {
         }
         page++;
       }
-
+      console.log(messages[0]);
       const result: ExportItem[] = messages
         .map((e) => ({
           content: e.title + "\n" + e.text,
@@ -73,15 +74,9 @@ export class TruspilotConnector implements Connector<State, Settings> {
           // already like: 2024-11-07T21:23:26.000Z
           date: e.createdAt,
           metadata: {
-            stars: `${e.stars}`,
-            user_status: `${e.user_status}`,
-            client_type: `${e.client_type}`,
-            departement: `${e.departement}`,
-            user_said_in_ae: `${e.user_said_in_ae}`,
-            user_signed_up_from: `${e.user_signed_up_from}`,
+            "trustpilot.stars": `${e.stars}`,
           },
         }));
-
       return {
         result,
         state: {

@@ -40,5 +40,5 @@ async function testSlack() {
   await Deno.writeTextFile("res-slack.json", JSON.stringify(j));
 }
 
-// await testTrustpilot();
-await testSlack();
+await testTrustpilot();
+// await testSlack();

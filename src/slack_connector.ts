@@ -69,7 +69,7 @@ export class SlackConnector implements Connector<State, Settings> {
       }
       const result: ExportItem[] = messages
         .filter((e) => e?.type === "message"
-          && e.subtype !== "channel_join") // keep messages only
+          && e.subtype !== "channel_join" && e.text.length > 0) // keep messages only
         .map((e) => ({
           content: e.text,
           id: e.client_msg_id,

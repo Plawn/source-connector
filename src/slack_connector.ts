@@ -1,6 +1,6 @@
 import { Connector, ExportItem } from "./connector.ts";
 import { WebClient } from "slack-web";
-import { prepare_date } from "./utils.ts";
+import { prepare_date_slack } from "./utils.ts";
 
 export type State = {
   // can be undefined when a channel has not much messages
@@ -73,7 +73,7 @@ export class SlackConnector implements Connector<State, Settings> {
         .map((e) => ({
           content: e.text,
           id: e.client_msg_id,
-          date: prepare_date(e.ts),
+          date: prepare_date_slack(e.ts),
           metadata: {},
         }));
       return {

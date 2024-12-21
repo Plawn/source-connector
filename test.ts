@@ -40,5 +40,32 @@ async function testSlack() {
   await Deno.writeTextFile("res-slack.json", JSON.stringify(j));
 }
 
-await testTrustpilot();
+
+async function testAppStore() {
+  const params = {
+    appId: Deno.env.get("APPSTORE_APPID"),
+    key: Deno.env.get("APPSTORE_KEY"),
+    keyId: Deno.env.get("APPSTORE_KEYID"),
+  };
+
+  const state = "{\"lastCursor\":\"BOI.AN8kDFM\",\"lastIds\":[\"00000056-5c27-ad02-577c-7bc300000000\",\"00000056-5c27-ad02-52cb-527600000000\",\"00000056-5c27-ad02-5000-b24d00000000\",\"00000056-5c27-ad02-4946-6da300000000\",\"00000056-5c27-ad02-4736-51d800000000\",\"00000056-5c27-ad02-460b-18f200000000\",\"00000056-5c27-ad02-3b96-e5c000000000\",\"00000056-5c27-ad02-38ea-419c00000000\",\"00000056-5c27-ad02-36dc-309100000000\",\"00000056-5c27-ad02-3362-304200000000\",\"00000056-5c27-ad02-31d7-c8ff00000000\",\"00000056-5c27-ad02-0560-bd9f00000000\",\"00000056-5c27-ad01-f0f5-b2cc00000000\",\"00000056-5c27-ad01-ef9f-f17b00000000\",\"00000056-5c27-ad01-e265-3cdb00000000\",\"00000056-5c27-ad01-daa5-1df100000000\",\"00000056-5c27-ad01-d757-170900000000\",\"00000056-5c27-ad01-cd98-7a8400000000\",\"00000056-5c27-ad01-b694-b7b900000000\",\"00000056-5c27-ad01-aa73-235f00000000\",\"00000056-5c27-ad01-9243-5da100000000\",\"00000056-5c27-ad01-9136-3b4500000000\",\"00000056-5c27-ad01-8b1e-78f700000000\",\"00000056-5c27-ad01-7429-0b4800000000\",\"00000056-5c27-ad01-73b1-2ae500000000\",\"00000056-5c27-ad01-44e8-ad1500000000\",\"00000056-5c27-ad01-2549-5dbf00000000\",\"00000056-5c27-ad01-0b08-705d00000000\"]}"
+
+  // const res = await fetch("https://source.temp1-webservice.blumana.app/slack", {
+    const res = await fetch("http://localhost:8000/app_store", {
+    method: "POST",
+    body: JSON.stringify({
+      // state: JSON.stringify(state),
+      state,
+      settings: JSON.stringify(params),
+    }),
+  });
+
+  const j = await res.json();
+
+  await Deno.writeTextFile("res-appstore.json", JSON.stringify(j));
+}
+
+// await testTrustpilot();
 // await testSlack();
+
+await testAppStore();

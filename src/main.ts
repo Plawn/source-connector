@@ -2,8 +2,15 @@ import { Hono } from "hono";
 import { SlackConnector } from "./slack_connector.ts";
 import { TruspilotConnector } from "./trustpilot_connector.ts";
 import { AppStoreConnector } from "./app_store_connector.ts";
+import { prometheus } from 'npm:@hono/prometheus';
+import {} from "npm:prom-client";
 
 const app = new Hono();
+
+const { printMetrics, registerMetrics } = prometheus()
+
+app.use('*', registerMetrics)
+app.get('/metrics', printMetrics);
 
 function getConnector(name: string, settings: string) {
   switch (name) {

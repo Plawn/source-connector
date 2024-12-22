@@ -1,12 +1,11 @@
 import { Connector, ExportItem } from "./connector.ts";
 import { prepare_date_appstore } from "./utils.ts";
 import {
-    create,
-    getNumericDate,
-    Header,
-    Payload,
-  } from "https://deno.land/x/djwt@v3.0.2/mod.ts";
-  
+  create,
+  getNumericDate,
+  Header,
+  Payload,
+} from "https://deno.land/x/djwt@v3.0.2/mod.ts";
 
 export type State = {
   // can be undefined when a channel has not much messages
@@ -23,7 +22,67 @@ export type Settings = {
   appId: string;
 };
 
+export interface AppstoreChunk {
+  data: Datum[];
+  links: AppstoreLinks;
+  meta: Meta;
+}
 
+export interface Datum {
+  type: Type;
+  id: string;
+  attributes: Attributes;
+  relationships: Relationships;
+  links: DatumLinks;
+}
+
+export interface Attributes {
+  rating: number;
+  title: string;
+  body: string;
+  reviewerNickname: string;
+  createdDate: string;
+  territory: Territory;
+}
+
+export enum Territory {
+  Fra = "FRA",
+}
+
+export interface DatumLinks {
+  self: string;
+}
+
+export interface Relationships {
+  response: Response;
+}
+
+export interface Response {
+  links: ResponseLinks;
+}
+
+export interface ResponseLinks {
+  self: string;
+  related: string;
+}
+
+export enum Type {
+  CustomerReviews = "customerReviews",
+}
+
+export interface AppstoreLinks {
+  self: string;
+  next: string;
+}
+
+export interface Meta {
+  paging: Paging;
+}
+
+export interface Paging {
+  total: number;
+  limit: number;
+}
 
 async function importPrivateKey(pemKey: string): Promise<CryptoKey> {
   // Remove the header and footer of the PEM key
@@ -70,8 +129,15 @@ async function generateTokenWithSub(
   return token;
 }
 
-async function getAppData(appId: string, token: string, cursor: string | undefined) {
-  const url = `https://api.appstoreconnect.apple.com/v1/apps/${appId}/customerReviews?limit=200${cursor ? `&cursor=${cursor}` :""}`;
+async function getAppData(
+  appId: string,
+  token: string,
+  cursor: string | undefined,
+) {
+  const url =
+    `https://api.appstoreconnect.apple.com/v1/apps/${appId}/customerReviews?limit=200${
+      cursor ? `&cursor=${cursor}` : ""
+    }`;
   console.log(url);
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -86,8 +152,6 @@ async function getAppData(appId: string, token: string, cursor: string | undefin
     return null;
   }
 }
-// should have a proper type
-type AppStoreChunk = any;
 
 type AppStoreItem = {
   id: string;
@@ -108,7 +172,10 @@ export class AppStoreConnector implements Connector<State, Settings> {
   async get(
     state: Partial<State>,
   ): Promise<{ result: ExportItem[]; state: State }> {
-    const token = await generateTokenWithSub(this.settings.keyId, this.settings.key);
+    const token = await generateTokenWithSub(
+      this.settings.keyId,
+      this.settings.key,
+    );
 
     try {
       let messages: AppStoreItem[] = [];
@@ -119,7 +186,7 @@ export class AppStoreConnector implements Connector<State, Settings> {
       // console.log('entry cursor', cursor);
       while (hasMore) {
         // need to handle paging
-        const result: AppStoreChunk = await getAppData(
+        const result: AppstoreChunk = await getAppData(
           this.settings.appId,
           token,
           cursor,
@@ -128,7 +195,7 @@ export class AppStoreConnector implements Connector<State, Settings> {
         result.data = result.data.filter((e) => {
           return e.type === "customerReviews";
         });
-        console.log('got', result.data.length);
+        console.log("got", result.data.length);
         if (result.data) {
           next_last_ids = new Set(result.data.map((e) => e.id));
           messages = messages.concat(
@@ -137,9 +204,9 @@ export class AppStoreConnector implements Connector<State, Settings> {
               .map((e) => ({
                 id: e.id,
                 content: e.attributes.body,
-                date: e.attributes.createdDate,
+                date: prepare_date_appstore(e.attributes.createdDate),
                 metadata: {
-                  rating: ""+e.attributes.rating,
+                  rating: "" + e.attributes.rating,
                 },
               })),
           );
@@ -148,18 +215,12 @@ export class AppStoreConnector implements Connector<State, Settings> {
         // TODO: handle paging properly
         hasMore = Boolean(result.links.next) || false;
         if (result.links.next) {
-            const c = new URL(result.links.next);
+          const c = new URL(result.links.next);
           console.log("did page", cursor);
           cursor = c.searchParams.get("cursor") as string;
         }
       }
-      const result: ExportItem[] = messages
-        .map((e) => ({
-          content: e.content,
-          id: e.id,
-          date: prepare_date_appstore(e.date),
-          metadata: e.metadata,
-        }));
+      const result: ExportItem[] = messages;
       return {
         result,
         state: {

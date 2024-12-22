@@ -133,7 +133,7 @@ async function getAppData(
   appId: string,
   token: string,
   cursor: string | undefined,
-) {
+): Promise<AppstoreChunk> {
   const url =
     `https://api.appstoreconnect.apple.com/v1/apps/${appId}/customerReviews?limit=200${
       cursor ? `&cursor=${cursor}` : ""
@@ -149,7 +149,7 @@ async function getAppData(
     return await response.json(); // Return app data as JSON
   } else {
     console.error(`Error: ${response.status} - ${await response.text()}`);
-    return null;
+    throw new Error("failed to query app store api")
   }
 }
 
@@ -186,7 +186,7 @@ export class AppStoreConnector implements Connector<State, Settings> {
       // console.log('entry cursor', cursor);
       while (hasMore) {
         // need to handle paging
-        const result: AppstoreChunk = await getAppData(
+        const result = await getAppData(
           this.settings.appId,
           token,
           cursor,
@@ -225,6 +225,7 @@ export class AppStoreConnector implements Connector<State, Settings> {
         result,
         state: {
           lastCursor: cursor,
+          // ensure on we don't have the smae multiple times on the last page
           lastIds: [...next_last_ids.values()],
         },
       };

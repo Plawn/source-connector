@@ -2,6 +2,7 @@
   "version": "4",
   "specifiers": {
     "npm:@hono/prometheus@*": "1.0.1_hono@4.6.14_prom-client@15.1.3",
+    "npm:google-maps-review-scraper@*": "1.4.0",
     "npm:prom-client@*": "15.1.3"
   },
   "npm": {
@@ -17,6 +18,15 @@
     },
     "bintrees@1.0.2": {
       "integrity": "sha512-VOMgTMwjAaUG580SXn3LacVgjurrbMme7ZZNYGSSV7mmtY6QQRh0Eg3pwIcntQ77DErK1L0NxkbetjcoXzVwKw=="
+    },
+    "google-maps-review-scraper@1.4.0": {
+      "integrity": "sha512-AOTwjPfmsPkLXO1p3BZmQBkFxZmzIUGwYv75Tx14Kt9U9UKAimBJhpEUufeQOZTf4RlShmhufvmCMmAv/FjMgQ==",
+      "dependencies": [
+        "hex2dec"
+      ]
+    },
+    "hex2dec@1.1.2": {
+      "integrity": "sha512-Yu+q/XWr2fFQ11tHxPq4p4EiNkb2y+lAacJNhAdRXVfRIcDH6gi7htWFnnlIzvqHMHoWeIsfXlNAjZInpAOJDA=="
     },
     "hono@4.6.14": {
       "integrity": "sha512-j4VkyUp2xazGJ8eCCLN1Vm/bxdvm/j5ZuU9AIjLu9vapn2M44p9L3Ktr9Vnb2RN2QtcR/wVjZVMlT5k7GJQgPw=="

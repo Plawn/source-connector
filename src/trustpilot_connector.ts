@@ -72,6 +72,7 @@ export class TruspilotConnector implements Connector<State, Settings> {
           content: e.title + "\n" + e.text,
           id: e.id,
           // already like: 2024-11-07T21:23:26.000Z
+          //               2025-01-13T12:18:48
           date: e.createdAt,
           metadata: {
             "trustpilot.stars": `${e.stars}`,

@@ -2,15 +2,19 @@ import { Hono } from "hono";
 import { SlackConnector } from "./slack_connector.ts";
 import { TruspilotConnector } from "./trustpilot_connector.ts";
 import { AppStoreConnector } from "./app_store_connector.ts";
-import { prometheus } from 'npm:@hono/prometheus';
+import { prometheus } from "npm:@hono/prometheus";
 import {} from "npm:prom-client";
+import { GoogleConnector } from "./google.ts";
+import { MapsConnector } from "./google_maps.ts";
 
 const app = new Hono();
 
-const { printMetrics, registerMetrics } = prometheus()
+const { printMetrics, registerMetrics } = prometheus();
 
-app.use('*', registerMetrics)
-app.get('/metrics', printMetrics);
+// @ts-ignore
+app.use("*", registerMetrics);
+// @ts-ignore
+app.get("/metrics", printMetrics);
 
 function getConnector(name: string, settings: string) {
   switch (name) {
@@ -22,24 +26,31 @@ function getConnector(name: string, settings: string) {
       return new TruspilotConnector(JSON.parse(settings));
     case "app_store":
       // TODO should check params
-      return new AppStoreConnector(JSON.parse(settings))
+      return new AppStoreConnector(JSON.parse(settings));
+    case "play_store":
+      // TODO should check params
+      return new GoogleConnector(JSON.parse(settings));
+    case "maps":
+      return new MapsConnector(JSON.parse(settings));
     default:
+      // TODO: throw 404
       throw new Error("failed to find connector");
   }
 }
 
 type Input = {
-  state: string;
+  state?: string | undefined | null;
   settings: string;
 };
 
 app.post("/:connectorName", async (c) => {
   const connectorName = c.req.param("connectorName");
+  // TODO: validate
   const params: Input = await c.req.json();
   const connector = getConnector(connectorName, params.settings);
   console.log("using connector", connector);
   // should check params of state
-  const state = JSON.parse(params.state);
+  const state = JSON.parse(params.state || "{}");
   const result = await connector.get(state);
 
   return c.json({

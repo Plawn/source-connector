@@ -1,6 +1,7 @@
 export type ExportItem = {
   id: string | undefined;
   content: string | undefined;
+  rating?: number;
   // Option<DateTime<Utc>> -> should be jackson date
   date: string | undefined;
   metadata: { [key: string]: string };

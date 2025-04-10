@@ -54,9 +54,9 @@ export class TruspilotConnector implements Connector<State, Settings> {
         const result: Res = await resp.json();
         if (result.reviews.length > 0) {
           // ensure no duplicates on last page
-          next_last_ids = new Set(result.reviews.map(e => e.id));
+          next_last_ids = new Set(result.reviews.map((e) => e.id));
           messages = messages.concat(
-            result.reviews.filter((e) => !last_ids.has(e.id))
+            result.reviews.filter((e) => !last_ids.has(e.id)),
           );
         }
         console.log("next cursor", result.nextPageToken);
@@ -74,9 +74,8 @@ export class TruspilotConnector implements Connector<State, Settings> {
           // already like: 2024-11-07T21:23:26.000Z
           //               2025-01-13T12:18:48
           date: e.createdAt,
-          metadata: {
-            "trustpilot.stars": `${e.stars}`,
-          },
+          rating: e.stars,
+          metadata: {},
         }));
       return {
         result,

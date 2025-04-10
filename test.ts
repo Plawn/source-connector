@@ -75,6 +75,7 @@ async function testPlaystoreStore() {
 
   const state = "{}";
 
+  // const res = await fetch("https://source-prod.temp2-webservice.blumana.app/play_store", {
   const res = await fetch("http://localhost:8000/play_store", {
     method: "POST",
     body: JSON.stringify({
@@ -95,8 +96,10 @@ async function testMaps() {
     url: "https://www.google.com/maps/place/Krispy+Kreme+-+Gare+Ch%C3%A2telet+RATP/@48.8624293,2.3467738,17z/data=!3m1!4b1!4m6!3m5!1s0x47e66f54aa0bb9f7:0x1f2e322a2e2ee1db!8m2!3d48.8624293!4d2.3467738!16s%2Fg%2F11wnn12_v5",
   };
 
+  // const res = await fetch("https://source.temp1-webservice.blumana.app/slack", {
   const state = "{\"last_ids\":[\"ChZDSUhNMG9nS0VJQ0FnTUR3cDVDMFZnEAE\",\"ChdDSUhNMG9nS0VJQ0FnTUR3eDg3aW1BRRAB\",\"ChdDSUhNMG9nS0VJQ0FnTUR3eDVUY3V3RRAB\",\"ChdDSUhNMG9nS0VJQ0FnTUR3aC11MzR3RRAB\"]}";
-  const res = await fetch("http://localhost:8000/maps", {
+  const res = await fetch("https://source-prod.temp2-webservice.blumana.app/maps", {
+  // const res = await fetch("http://localhost:8000/maps", {
     method: "POST",
     body: JSON.stringify({
       // state: JSON.stringify(state),
@@ -104,7 +107,7 @@ async function testMaps() {
       settings: JSON.stringify(params),
     }),
   });
-
+  console.log(res.status);
   const j = await res.json();
   console.log("got", j.result.length);
 

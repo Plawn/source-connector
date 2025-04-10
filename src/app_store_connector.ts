@@ -149,7 +149,7 @@ async function getAppData(
     return await response.json(); // Return app data as JSON
   } else {
     console.error(`Error: ${response.status} - ${await response.text()}`);
-    throw new Error("failed to query app store api")
+    throw new Error("failed to query app store api");
   }
 }
 
@@ -157,9 +157,8 @@ type AppStoreItem = {
   id: string;
   content: string;
   date: string;
-  metadata: {
-    rating: string;
-  };
+  rating: number;
+  metadata: {};
 };
 
 export class AppStoreConnector implements Connector<State, Settings> {
@@ -205,9 +204,8 @@ export class AppStoreConnector implements Connector<State, Settings> {
                 id: e.id,
                 content: e.attributes.body,
                 date: prepare_date_appstore(e.attributes.createdDate),
-                metadata: {
-                  rating: "" + e.attributes.rating,
-                },
+                rating: e.attributes.rating,
+                metadata: {},
               })),
           );
         }

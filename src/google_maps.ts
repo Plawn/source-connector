@@ -48,8 +48,8 @@ export class MapsConnector implements Connector<State, Settings> {
       id: e.review_id,
       content: e.review.text,
       date: prepare_date(e.time.last_edited),
+      rating: e.review.rating,
       metadata: {
-        "stars": `${e.review.rating}`,
         "language": e.review.language,
       },
     }));

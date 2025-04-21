@@ -56,7 +56,10 @@ export async function paginateReviews(
   lastIds: Set<string>,
   initialData: any,
 ) {
-
+  await Deno.writeTextFile(
+    "initial-data.json",
+    JSON.stringify(initialData),
+  );
   let reviews = parser(initialData[2]);
   const newIds = new Set(reviews.map((e) => e.review_id));
   const lastReviews = [...reviews];

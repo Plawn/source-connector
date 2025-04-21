@@ -33,6 +33,15 @@ export async function fetchReviews(
 }
 
 /**
+ * 
+ * @param ms - The number of milliseconds to sleep.
+ * @returns 
+ */
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
  * Paginates through reviews from a given URL.
  *
  * @param {string} url - The URL to fetch reviews from.
@@ -69,13 +78,15 @@ export async function paginateReviews(
     if (!nextPage) {
       break;
     }
+    console.log("new reviews", newReviews);
     console.log('last ids', newIds);
     console.log("did all", newIds.intersection(lastIds));
+    console.log("count", reviews.length);
     if (newIds.intersection(lastIds).size > 0) {
       // we already fecthed the rest
       break;
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Avoid rate-limiting
+    await sleep(1000);
     currentPage++;
   }
   return { reviews: reviews, lastIds: lastReviews.map((e) => e.review_id) };

@@ -1,6 +1,6 @@
-import { SortEnum } from "./src/types.ts";
-import { fetchReviews, paginateReviews } from "./src/utils.ts";
-import parseReviews from "./src/parser.ts";
+import { SortEnum } from "./types.ts";
+import { fetchReviews, paginateReviews } from "./utils.ts";
+import parseReviews from "./parser.ts";
 
 /**
  * Scrapes reviews from a given Google Maps URL.

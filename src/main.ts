@@ -4,7 +4,6 @@ import { TruspilotConnector } from "./trustpilot_connector.ts";
 import { AppStoreConnector } from "./app_store_connector.ts";
 import { prometheus } from "npm:@hono/prometheus";
 import {} from "npm:prom-client";
-import { GoogleConnector } from "./google.ts";
 import { MapsConnector } from "./google_maps.ts";
 
 const app = new Hono();
@@ -29,7 +28,8 @@ function getConnector(name: string, settings: string) {
       return new AppStoreConnector(JSON.parse(settings));
     case "play_store":
       // TODO should check params
-      return new GoogleConnector(JSON.parse(settings));
+      // return new GoogleConnector(JSON.parse(settings));
+      throw new Error("not supported anymore");
     case "maps":
       return new MapsConnector(JSON.parse(settings));
     default:

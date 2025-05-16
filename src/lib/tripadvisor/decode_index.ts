@@ -57,8 +57,8 @@ export async function getResults(html: string) {
     return links;
 }
 
-async function test() {
-    const html = await Deno.readTextFile("example/index.html");
-    return getResults(html);
-}
-console.log(await test());
+// async function test() {
+//     const html = await Deno.readTextFile("example/index.html");
+//     return getResults(html);
+// }
+// console.log(await test());

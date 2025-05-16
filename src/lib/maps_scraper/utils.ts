@@ -67,20 +67,20 @@ export async function paginateReviews(
   let nextPage = initialData[1]?.replace(/"/g, "");
   let currentPage = 2;
   while (true) {
-    console.log(`Scraping page ${currentPage}...`);
+    console.debug(`Scraping page ${currentPage}...`);
     const data = await fetchReviews(url, nextPage);
     const newReviews = parser(data[2]);
     // if one of last ids in new reviews -> then stop
     reviews = [...reviews, ...newReviews];
     nextPage = data[1]?.replace(/"/g, "");
-    console.log(nextPage, newIds, newIds.size);
+    console.debug(nextPage, newIds, newIds.size);
     if (!nextPage) {
       break;
     }
-    console.log("new reviews", newReviews);
-    console.log('last ids', newIds);
-    console.log("did all", newIds.intersection(lastIds));
-    console.log("count", reviews.length);
+    console.debug("new reviews", newReviews);
+    console.debug('last ids', newIds);
+    console.debug("did all", newIds.intersection(lastIds));
+    console.debug("count", reviews.length);
     if (newIds.intersection(lastIds).size > 0) {
       // we already fecthed the rest
       break;

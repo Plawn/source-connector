@@ -5,6 +5,7 @@ import { AppStoreConnector } from "./app_store_connector.ts";
 import { prometheus } from "npm:@hono/prometheus";
 import {} from "npm:prom-client";
 import { MapsConnector } from "./google_maps.ts";
+import { TripadivsorConnector } from "./tripadvisor.ts";
 
 const app = new Hono();
 
@@ -32,6 +33,8 @@ function getConnector(name: string, settings: string) {
       throw new Error("not supported anymore");
     case "maps":
       return new MapsConnector(JSON.parse(settings));
+    case "tripadvisor":
+      return new TripadivsorConnector(JSON.parse(settings));
     default:
       // TODO: throw 404
       throw new Error("failed to find connector");

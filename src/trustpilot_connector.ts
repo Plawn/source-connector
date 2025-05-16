@@ -32,13 +32,10 @@ export class TruspilotConnector implements Connector<State, Settings> {
   }
 
   async get(state: State): Promise<{ result: ExportItem[]; state: State }> {
-    console.log("in connector Trustpilot");
     try {
       let messages: Item[] = [];
       const last_ids = new Set<string>(state.last_ids || []);
-      console.log("state", state);
       let page: number = state.page || 1;
-      console.log("first cursor", page);
       const headers = new Headers();
       let next_last_ids = new Set<string>();
       headers.append("apikey", this.settings.apiKey);
@@ -59,14 +56,11 @@ export class TruspilotConnector implements Connector<State, Settings> {
             result.reviews.filter((e) => !last_ids.has(e.id)),
           );
         }
-        console.log("next cursor", result.nextPageToken);
-        console.log("did page", page, "having", messages.length);
         if (result.reviews.length < 100) {
           break;
         }
         page++;
       }
-      console.log(messages[0]);
       const result: ExportItem[] = messages
         .map((e) => ({
           content: e.title + "\n" + e.text,

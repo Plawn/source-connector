@@ -194,7 +194,6 @@ export class AppStoreConnector implements Connector<State, Settings> {
         result.data = result.data.filter((e) => {
           return e.type === "customerReviews";
         });
-        console.log("got", result.data.length);
         if (result.data) {
           next_last_ids = new Set(result.data.map((e) => e.id));
           messages = messages.concat(
@@ -209,12 +208,10 @@ export class AppStoreConnector implements Connector<State, Settings> {
               })),
           );
         }
-        console.log("links", result.links);
         // TODO: handle paging properly
         hasMore = Boolean(result.links.next) || false;
         if (result.links.next) {
           const c = new URL(result.links.next);
-          console.log("did page", cursor);
           cursor = c.searchParams.get("cursor") as string;
         }
       }

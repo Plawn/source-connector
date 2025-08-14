@@ -97,9 +97,7 @@ async function testMaps() {
   };
 
   // const res = await fetch("https://source.temp1-webservice.blumana.app/slack", {
-  const state = `{"last_ids": [
-    "Ci9DQUlRQUNvZENodHljRjlvT21aa1MwcFlNVTB5UjNkZmFEUkNaMUp4ZEZsNVZtYxAB"
-  ]}`;
+  const state = `{\"last_ids\":[\"Ci9DQUlRQUNvZENodHljRjlvT2tFeVJuRmZTMHBEZW5KaGJYUmtYMVZWYnpJMlMzYxAB\",\"Ci9DQUlRQUNvZENodHljRjlvT2paQlNtczVOVmh0ZDJwNVFVOWhWVUZaYzFwT2RrRRAB\",\"Ci9DQUlRQUNvZENodHljRjlvT2tKRlpEZGFSRkZLTjNkVVdFRlNlRkl5Wm5CUE5XYxAB\",\"Ci9DQUlRQUNvZENodHljRjlvT21SNmRFVTBkMU54WDBsT1RuY3RVMUJCYTJwa1MwRRAB\",\"Ci9DQUlRQUNvZENodHljRjlvT25oSlh6bFNjRU5xZVRoeWVubGpabGRuVm14NmFsRRAB\"]}`;
   // const res = await fetch("https://source-prod.temp2-webservice.blumana.app/maps", {
   const res = await fetch("http://localhost:8000/maps", {
     method: "POST",

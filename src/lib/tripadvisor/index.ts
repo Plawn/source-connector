@@ -32,7 +32,7 @@ async function loadFirst(url: string): Promise<FirstResponse> {
   const req = await fetch(url, {
     headers: {
       "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:136.0) Gecko/20100101 Firefox/136.0",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
       "Accept":
         "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
@@ -145,11 +145,13 @@ export async function scrape(url: string, previous: string[]) {
   return end();
 }
 
-// console.log(await loadFirst("https://fr.tripadvisor.ca/Attraction_Review-g155032-d155197-Reviews-Casino_de_Montreal-Montreal_Quebec.html"))
+// const url =
+//   "https://fr.tripadvisor.ca/Attraction_Review-g182183-d2311154-Reviews-Casino_De_Mont_tremblant-Mont_Tremblant_Quebec.html";
 
-// const result = await scrape(
-//     "https://fr.tripadvisor.ca/Attraction_Review-g155032-d155197-Reviews-Casino_de_Montreal-Montreal_Quebec.html",
-//     ["1004208194"],
-// );
+console.log(await loadFirst("https://fr.tripadvisor.ca/Attraction_Review-g155032-d155197-Reviews-Casino_de_Montreal-Montreal_Quebec.html"))
+
+// const result = await scrape(url, []);
+
+// console.log(result);
 
 // await Deno.writeTextFile("real_result.json", JSON.stringify(result));

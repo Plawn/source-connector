@@ -40,7 +40,7 @@ export async function getResults(html: string) {
     const end = findEnd(html);
     console.log(end);
     // const end = -41;
-    // await Deno.writeTextFile("slice", html.slice(match + start.length, end));
+    await Deno.writeTextFile("slice", html.slice(match + start.length, end));
     const js = decodeURIComponent(html.slice(match + start.length, end));
     // console.log(js);
     // await Deno.writeTextFile("extract.js", js);

@@ -93,11 +93,13 @@ async function testPlaystoreStore() {
 
 async function testMaps() {
   const params = {
-    url: "https://www.google.com/maps/place/Hilton+Lac-Leamy/@45.4472925,-75.7266341,17z/data=!4m9!3m8!1s0x4cce04a16fce0b65:0xd85a84508894de80!5m2!4m1!1i2!8m2!3d45.4472925!4d-75.7240538!16s%2Fg%2F1v2ppvc5",
+    url: "https://www.google.com/maps/place/Casino+de+Montr%C3%A9al/@45.5054701,-73.5282067,17z/data=!4m8!3m7!1s0x4cc91ae0fed4a77f:0xbb03ae1dde72e441!8m2!3d45.5054701!4d-73.5256318!9m1!1b1!16zL20vMDQzMW1j?entry=ttu&g_ep=EgoyMDI1MDQxNi4xIKXMDSoASAFQAw%3D%3D",
   };
 
   // const res = await fetch("https://source.temp1-webservice.blumana.app/slack", {
-  const state = "{}";
+  const state = `{"last_ids": [
+    "Ci9DQUlRQUNvZENodHljRjlvT21aa1MwcFlNVTB5UjNkZmFEUkNaMUp4ZEZsNVZtYxAB"
+  ]}`;
   // const res = await fetch("https://source-prod.temp2-webservice.blumana.app/maps", {
   const res = await fetch("http://localhost:8000/maps", {
     method: "POST",

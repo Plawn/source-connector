@@ -53,8 +53,9 @@ export class MapsConnector implements Connector<State, Settings> {
         "language": e.review.language,
       },
     }));
+    const previous_last_ids = state.last_ids || [];
     return {
-      result: result.filter(e => !lastIds.includes(e.id)),
+      result: result.filter(e => !previous_last_ids.includes(e.id)),
       state: {
         last_ids: lastIds,
       },
